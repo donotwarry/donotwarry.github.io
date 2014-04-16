@@ -1,0 +1,27 @@
+---
+layout: post
+title: APK手动打包过程记录
+---
+
+h1. {{ page.title }}
+
+p(meta). 2014.4.16 - Shanghai
+
+!/images/apkbuilder.png!
+
+1.生成R文件、class文件（这一步因为eclipse自动帮我编译了，暂时略过）
+
+2.打包classes.dex文件
+dx --dex --output=./classes.dex ./classes/
+
+3.打包apkbuilder（apkbuilder在新版本的sdk tool中已经被移除，google认为他不稳定，这里我手动添加了一个）
+apkbuilder sample.devloader.apk -v -u -z ./resources.ap_ -f ./classes.dex -rf /Users/dengjun86/develop/workspace_newsvn1/sample.devloader/src/
+
+Packaging sample.devloader.apk
+./resources.ap_:
+=> res/layout/activity_main.xml
+=> AndroidManifest.xml
+=> resources.arsc
+./classes.dex => classes.dex
+
+成功!
