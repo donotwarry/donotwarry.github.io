@@ -10,12 +10,44 @@ p(meta). 2014.4.16 - Shanghai
 !/images/apkbuilder.png!
 
 1.生成R文件、class文件（这一步因为eclipse自动帮我编译了，暂时略过）
+aapt package -f -m -J ./gen -S res -M AndroidManifest.xml -I android.jar
+
+-f 如果编译生成的文件已经存在，强制覆盖。
+-m 使生成的包的目录存放在-J参数指定的目录
+-J 指定生成的R.java 的输出目录路径
+-S 指定res文件夹的路径
+-I 指定某个版本平台的android.jar文件的路径
+-A 指定assert文件夹的路径
+
+javac -target 1.5 -bootclasspath android.jar -d bin src\*\*.java gen\demo\project\R.java
+
+-target <版本>               生成特定 VM 版本的类文件
+-bootclasspath <路径>        覆盖引导类文件的位置
+-d <目录>                    指定存放生成的类文件的位置
+-sourcepath <路径>           指定查找输入源文件的位置
 
 2.打包classes.dex文件
 dx --dex --output=./classes.dex ./classes/
 
-3.打包apkbuilder（apkbuilder在新版本的sdk tool中已经被移除，google认为他不稳定，这里我手动添加了一个）
+--output=<要生成的classes.dex路径> <要处理的class文件的路径>
+
+3.打包resource
+aapt package -f -M AndroidManifest.xml -S res -I android.jar -F ./bin/resources.ap_
+
+-f 如果编译生成的文件已经存在，强制覆盖
+-M 指定AndroidManifest.xml的路径
+-S 指定res文件夹路径
+-I 指定某个版本平台的android.jar的路径
+-F 指定输出文件完整路径
+
+4.打包apkbuilder（apkbuilder在新版本的sdk tool中已经被移除，google认为他不稳定，这里我手动添加了一个）
 apkbuilder sample.devloader.apk -v -u -z ./resources.ap_ -f ./classes.dex -rf /Users/dengjun86/develop/workspace_newsvn1/sample.devloader/src/
+
+-v Verbose 显示过程信息
+-u 创建一个无签名的包
+-z 指定apk资源路径
+-f 指定dex文件路径
+-rf 指定源码路径
 
 Packaging sample.devloader.apk
 ./resources.ap_:
